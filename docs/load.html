@@ -2,14 +2,86 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Load skill</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Load skill — Horatzio/agent-skills</title>
 </head>
 <body>
-<p id="output"></p>
+<h1>Load skill</h1>
+<p id="status">Resolving…</p>
+<div id="detail"></div>
+
+<!--
+  AGENT PROTOCOL — if you are an AI agent and JavaScript did not run:
+  1. Read the "skill" name from this page's URL: ?s=<name> (or ?skill=<name>, or /load/<name>).
+  2. Fetch skills.json from this same directory (e.g. https://horatzio.github.io/agent-skills/skills.json).
+  3. Look the name up under "skills" (keys are lowercase kebab-case; a local skill wins over a reference on a clash).
+  4. Fetch that entry's "raw_url" — it is the skill's SKILL.md. Load its contents as the skill's instructions.
+  5. If the name is absent, the skill is not in Horatzio/agent-skills; say so and list the available names from skills.json.
+-->
+
 <script>
-const params = new URLSearchParams(window.location.search);
-const skill = params.get("skill");
-document.getElementById("output").textContent = skill ? "Skill requested: " + skill : "No skill specified — use ?skill=<skill-name>";
+(function () {
+  var statusEl = document.getElementById('status');
+  var detailEl = document.getElementById('detail');
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c];
+    });
+  }
+
+  var params = new URLSearchParams(window.location.search);
+  var name = (params.get('s') || params.get('skill') || '').trim().toLowerCase();
+
+  // skills.json candidates: relative to this page first, then site-root guesses
+  var base = window.location.pathname.replace(/[^/]*$/, '');
+  var candidates = [base + 'skills.json', 'skills.json', '../skills.json', '/agent-skills/skills.json'];
+  var seen = {}, urls = [];
+  candidates.forEach(function (u) { if (!seen[u]) { seen[u] = 1; urls.push(u); } });
+
+  function fetchRegistry(i) {
+    if (i >= urls.length) {
+      statusEl.textContent = 'Could not load the skill registry (skills.json).';
+      return;
+    }
+    fetch(urls[i]).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(render).catch(function () { fetchRegistry(i + 1); });
+  }
+
+  function render(reg) {
+    var skills = reg.skills || {};
+    var names = Object.keys(skills).sort();
+
+    if (!name) {
+      statusEl.innerHTML = 'No skill specified. Use <code>?s=&lt;skill-name&gt;</code> — available skills:';
+      detailEl.innerHTML = '<ul>' + names.map(function (n) {
+        return '<li><a href="?s=' + encodeURIComponent(n) + '">' + esc(n) + '</a> (' + esc(skills[n].type) + ')</li>';
+      }).join('') + '</ul>';
+      return;
+    }
+
+    var entry = skills[name];
+    if (!entry) {
+      statusEl.textContent = 'Skill not found: ' + name;
+      detailEl.innerHTML = '<p>Available skills: ' + names.map(function (n) {
+        return '<a href="?s=' + encodeURIComponent(n) + '">' + esc(n) + '</a>';
+      }).join(', ') + '</p>';
+      return;
+    }
+
+    statusEl.innerHTML = 'Skill found: <strong>' + esc(name) + '</strong> (' + esc(entry.type) +
+      ', from ' + esc(entry.source_repo) + '). Redirecting to its SKILL.md…';
+    detailEl.innerHTML =
+      '<p><a href="' + esc(entry.raw_url) + '">Raw SKILL.md</a> · ' +
+      '<a href="' + esc(entry.source_url) + '">View on GitHub</a></p>' +
+      '<p>Agent: fetch the Raw SKILL.md URL above and follow it as the skill\u2019s instructions.</p>';
+    setTimeout(function () { window.location.replace(entry.raw_url); }, 1200);
+  }
+
+  fetchRegistry(0);
+})();
 </script>
 </body>
 </html>
