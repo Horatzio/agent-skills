@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found — Horatzio/agent-skills</title>
+</head>
+<body>
+<h1>Not found</h1>
+<p id="status">That page does not exist.</p>
+
+<script>
+(function () {
+  // Path form: /agent-skills/load/<skill-name> → /agent-skills/load?s=<skill-name>
+  var segments = window.location.pathname.split('/').filter(function (s) { return s.length > 0; });
+  var i = segments.indexOf('load');
+  if (i >= 0 && segments[i + 1]) {
+    var name = decodeURIComponent(segments[i + 1]).toLowerCase();
+    var root = '/' + segments.slice(0, i).join('/') + (i > 0 ? '/' : '');
+    document.getElementById('status').textContent = 'Loading skill: ' + name + '…';
+    window.location.replace(root + 'load?s=' + encodeURIComponent(name));
+  }
+})();
+</script>
+</body>
+</html>
