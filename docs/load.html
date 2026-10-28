@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Load skill</title>
+</head>
+<body>
+<p id="output"></p>
+<script>
+const params = new URLSearchParams(window.location.search);
+const skill = params.get("skill");
+document.getElementById("output").textContent = skill ? "Skill requested: " + skill : "No skill specified — use ?skill=<skill-name>";
+</script>
+</body>
+</html>
