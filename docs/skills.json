@@ -1,0 +1,189 @@
+{
+  "version": 1,
+  "generated_from": "REFERENCES.md + skills/ on main of Horatzio/agent-skills",
+  "note": "Local skills win on name clashes (see LOADING.md). Regenerate when REFERENCES.md or skills/ changes.",
+  "skills": {
+    "algorithmic-art": {
+      "type": "reference",
+      "source_repo": "anthropics/skills",
+      "source_url": "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",
+      "raw_url": "https://raw.githubusercontent.com/anthropics/skills/main/skills/algorithmic-art/SKILL.md",
+      "load": "Anthropic short form"
+    },
+    "chief-of-staff": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills (in-progress)",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/in-progress/chief-of-staff",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/in-progress/chief-of-staff/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "claude-handoff": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills (in-progress)",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/in-progress/claude-handoff",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/in-progress/claude-handoff/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "code-simplification": {
+      "type": "reference",
+      "source_repo": "addyosmani/agent-skills",
+      "source_url": "https://github.com/addyosmani/agent-skills/tree/main/skills/code-simplification",
+      "raw_url": "https://raw.githubusercontent.com/addyosmani/agent-skills/main/skills/code-simplification/SKILL.md",
+      "load": "Addy Osmani short form"
+    },
+    "context-engineering": {
+      "type": "reference",
+      "source_repo": "addyosmani/agent-skills",
+      "source_url": "https://github.com/addyosmani/agent-skills/tree/main/skills/context-engineering",
+      "raw_url": "https://raw.githubusercontent.com/addyosmani/agent-skills/main/skills/context-engineering/SKILL.md",
+      "load": "Addy Osmani short form"
+    },
+    "doc-coauthoring": {
+      "type": "reference",
+      "source_repo": "anthropics/skills",
+      "source_url": "https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring",
+      "raw_url": "https://raw.githubusercontent.com/anthropics/skills/main/skills/doc-coauthoring/SKILL.md",
+      "load": "Anthropic short form"
+    },
+    "effort": {
+      "type": "local",
+      "source_repo": "Horatzio/agent-skills",
+      "source_url": "https://github.com/Horatzio/agent-skills/tree/main/skills/effort",
+      "raw_url": "https://raw.githubusercontent.com/Horatzio/agent-skills/main/skills/effort/SKILL.md",
+      "load": "npx skills add Horatzio/agent-skills --skill effort"
+    },
+    "grill-me": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/productivity/grill-me/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "grill-with-docs": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/engineering/grill-with-docs",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/engineering/grill-with-docs/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "grilling": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/productivity/grilling/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "handoff": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/productivity/handoff",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/productivity/handoff/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "idea-refine": {
+      "type": "reference",
+      "source_repo": "addyosmani/agent-skills",
+      "source_url": "https://github.com/addyosmani/agent-skills/tree/main/skills/idea-refine",
+      "raw_url": "https://raw.githubusercontent.com/addyosmani/agent-skills/main/skills/idea-refine/SKILL.md",
+      "load": "Addy Osmani short form"
+    },
+    "interview-me": {
+      "type": "reference",
+      "source_repo": "addyosmani/agent-skills",
+      "source_url": "https://github.com/addyosmani/agent-skills/tree/main/skills/interview-me",
+      "raw_url": "https://raw.githubusercontent.com/addyosmani/agent-skills/main/skills/interview-me/SKILL.md",
+      "load": "Addy Osmani short form"
+    },
+    "performance-optimization": {
+      "type": "reference",
+      "source_repo": "addyosmani/agent-skills",
+      "source_url": "https://github.com/addyosmani/agent-skills/tree/main/skills/performance-optimization",
+      "raw_url": "https://raw.githubusercontent.com/addyosmani/agent-skills/main/skills/performance-optimization/SKILL.md",
+      "load": "Addy Osmani short form"
+    },
+    "prototype": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/engineering/prototype",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/engineering/prototype/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "research": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/engineering/research",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/engineering/research/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "retro": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/engineering/retro",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/engineering/retro/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "security-and-hardening": {
+      "type": "reference",
+      "source_repo": "addyosmani/agent-skills",
+      "source_url": "https://github.com/addyosmani/agent-skills/tree/main/skills/security-and-hardening",
+      "raw_url": "https://raw.githubusercontent.com/addyosmani/agent-skills/main/skills/security-and-hardening/SKILL.md",
+      "load": "Addy Osmani short form"
+    },
+    "skill-creator": {
+      "type": "reference",
+      "source_repo": "anthropics/skills",
+      "source_url": "https://github.com/anthropics/skills/tree/main/skills/skill-creator",
+      "raw_url": "https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md",
+      "load": "Anthropic short form"
+    },
+    "teach": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/productivity/teach",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/productivity/teach/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "theme-factory": {
+      "type": "reference",
+      "source_repo": "anthropics/skills",
+      "source_url": "https://github.com/anthropics/skills/tree/main/skills/theme-factory",
+      "raw_url": "https://raw.githubusercontent.com/anthropics/skills/main/skills/theme-factory/SKILL.md",
+      "load": "Anthropic short form"
+    },
+    "using-agent-skills": {
+      "type": "reference",
+      "source_repo": "addyosmani/agent-skills",
+      "source_url": "https://github.com/addyosmani/agent-skills/tree/main/skills/using-agent-skills",
+      "raw_url": "https://raw.githubusercontent.com/addyosmani/agent-skills/main/skills/using-agent-skills/SKILL.md",
+      "load": "Addy Osmani short form"
+    },
+    "wait-what": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/productivity/wait-what",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/productivity/wait-what/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "web-artifacts-builder": {
+      "type": "reference",
+      "source_repo": "anthropics/skills",
+      "source_url": "https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder",
+      "raw_url": "https://raw.githubusercontent.com/anthropics/skills/main/skills/web-artifacts-builder/SKILL.md",
+      "load": "Anthropic short form"
+    },
+    "wizard": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/engineering/wizard",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/engineering/wizard/SKILL.md",
+      "load": "Matt Pocock short form"
+    },
+    "writing-for-agents": {
+      "type": "reference",
+      "source_repo": "mattpocock/skills",
+      "source_url": "https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents",
+      "raw_url": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/productivity/writing-for-agents/SKILL.md",
+      "load": "Matt Pocock short form"
+    }
+  }
+}
