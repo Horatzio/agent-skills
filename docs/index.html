@@ -2,10 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agent Skills</title>
 </head>
 <body>
 <h1>Agent Skills</h1>
-<p>Skill loader for Horatzio/agent-skills. Load a skill with: load?skill=&lt;skill-name&gt; — for example load?skill=wizard</p>
+<p>Skill loader for <a href="https://github.com/Horatzio/agent-skills">Horatzio/agent-skills</a>.</p>
+<p>Load a skill with any of these forms:</p>
+<ul>
+<li><code>load?s=wizard</code></li>
+<li><code>load?skill=wizard</code></li>
+<li><code>load/wizard</code></li>
+</ul>
+<p>Local skills (in the repo) win over referenced skills on a name clash.
+The registry is <a href="skills.json">skills.json</a>, generated from REFERENCES.md plus the repo's own skills.
+Agents: fetch <code>skills.json</code>, look up the name, then fetch that entry's <code>raw_url</code> (the skill's SKILL.md) and follow it.</p>
 </body>
 </html>
