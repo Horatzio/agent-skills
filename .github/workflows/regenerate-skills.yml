@@ -10,6 +10,7 @@ on:
     paths:
       - "REFERENCES.md"
       - "skills/**"
+      - "skillbooks/**"
       - "scripts/generate_skills_json.py"
       - ".github/workflows/regenerate-skills.yml"
   workflow_dispatch:
@@ -25,16 +26,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - name: Regenerate docs/skills.json
+      - name: Regenerate docs/skills.json and docs/skillbooks.json
         run: python scripts/generate_skills_json.py
-      - name: Commit updated registry if changed
+      - name: Commit updated registries if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if ! git diff --quiet docs/skills.json; then
-            git add docs/skills.json
-            git commit -m "Regenerate skills.json"
+          if ! git diff --quiet docs/skills.json docs/skillbooks.json; then
+            git add docs/skills.json docs/skillbooks.json
+            git commit -m "Regenerate skills.json and skillbooks.json"
             git push
           else
-            echo "Registry already up to date."
+            echo "Registries already up to date."
           fi
