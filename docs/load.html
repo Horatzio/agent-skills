@@ -63,8 +63,11 @@
   ul { padding-left: 1.25rem; }
   li { margin: 0.35rem 0; }
   .skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 0.75rem; margin: 1rem 0; }
-  .card { background: rgba(74, 78, 143, 0.35); border: 1px solid #4a4e8f; border-top: 3px solid #4a4e8f; border-radius: 12px; padding: 0.9rem 1rem; aspect-ratio: 1 / 1; display: flex; flex-direction: column; }
-  .card .emoji { font-size: 1.25rem; margin-right: 0.35rem; }
+  .card { background: rgba(74, 78, 143, 0.35); border: 1px solid #4a4e8f; border-top: 3px solid #4a4e8f; border-radius: 12px; padding: 0.9rem 1rem; aspect-ratio: 1 / 1; display: flex; flex-direction: column; gap: 0.45rem; }
+  .card .title { display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; }
+  .card .title a { flex: 1; min-width: 0; }
+  .card .emoji { font-size: 1.25rem; }
+  .card .badge { align-self: flex-start; margin-left: 0; }
   .card a.repo { font-weight: 400; }
   .card.own { border-top-color: #a490c2; }
   .card.skillbook { border-top-color: #d4af37; }
@@ -131,7 +134,7 @@
     var cards = names.map(function (n) {
       var own = skills[n].type === 'local';
       var emoji = skills[n].emoji ? '<span class="emoji">' + esc(skills[n].emoji) + '</span>' : '';
-      return '<article class="card ' + (own ? 'own' : 'ref') + '">' + emoji + '<a href="?s=' + encodeURIComponent(n) + '">' + esc(n) + '</a>' +
+      return '<article class="card ' + (own ? 'own' : 'ref') + '"><div class="title">' + emoji + '<a href="?s=' + encodeURIComponent(n) + '">' + esc(n) + '</a></div>' +
         '<span class="badge ' + (own ? 'own' : 'ref') + '">' + (own ? 'Own' : 'Referenced') + '</span>' +
         '<a class="repo" href="' + esc(skills[n].source_url) + '">' + esc(skills[n].source_repo) + '</a></article>';
     }).join('');
@@ -150,7 +153,7 @@
       var raw = b.description || '';
       if (raw.length > 120) raw = raw.slice(0, 120).replace(/\s+\S*$/, '') + '…';
       var desc = raw ? esc(raw) : '';
-      return '<article class="card skillbook"><span class="emoji">📚</span><a href="' + esc(b.url) + '">' + esc(b.title) + '</a>' +
+      return '<article class="card skillbook"><div class="title"><span class="emoji">📚</span><a href="' + esc(b.url) + '">' + esc(b.title) + '</a></div>' +
         '<span class="badge book">Skillbook</span>' +
         (desc ? '<p class="desc">' + desc + '</p>' : '') +
         '<a class="repo" href="' + esc(b.url) + '">skillbooks/' + esc(n) + '.md</a></article>';
