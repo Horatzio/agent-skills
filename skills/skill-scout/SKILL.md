@@ -5,7 +5,7 @@ description: "Find the best agent skills for an area and record them in a skillb
 
 # Skill Scout
 
-Given an area ("best agent skills for X"), find the skills worth using for it and record them in a **skillbook**: skills grouped by capability, each with what to use them for, how to load it, and a fit score.
+Given an area ("best agent skills for X"), find the skills worth using for it and record them in a **skillbook**: skills grouped by capability, each with what to use it for, how to load it, and a fit score.
 
 ## Pipeline
 
