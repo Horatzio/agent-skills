@@ -11,6 +11,10 @@ Rules (see LOADING.md):
 - Local skills are every directory under skills/ containing a SKILL.md:
   type "local", source_repo "Horatzio/agent-skills", load via npx skills add.
 - A local skill wins on a name clash with a reference.
+- Every entry gets an "emoji" from the EMOJI map below (shown on the skill
+  cards in docs/load.html). Unmapped names get a sparkle and a warning so
+  the gap is visible at generation time — add the emoji here, not in
+  skills.json by hand, or the next regeneration wipes it.
 - Output keys are sorted; formatting is json.dump with indent=2.
 """
 
@@ -25,6 +29,42 @@ SKILLS_DIR = ROOT / "skills"
 OUTPUT = ROOT / "docs" / "skills.json"
 
 LOCAL_REPO = "Horatzio/agent-skills"
+
+# One emoji per skill, shown on the cards in docs/load.html. Covers the
+# current registry plus skills with open PRs (redpen, i-have-adhd) so they
+# get an emoji as soon as the registry regenerates after their merge.
+EMOJI = {
+    "algorithmic-art": "🎨",
+    "chief-of-staff": "🗂️",
+    "clarify": "🔍",
+    "claude-handoff": "🤝",
+    "code-simplification": "✂️",
+    "context-engineering": "🧩",
+    "doc-coauthoring": "✍️",
+    "effort": "⚡",
+    "grill": "🔥",
+    "grill-me": "❓",
+    "grill-with-docs": "📄",
+    "grilling": "🍖",
+    "handoff": "📤",
+    "i-have-adhd": "🧠",
+    "idea-refine": "💡",
+    "interview-me": "🎤",
+    "performance-optimization": "🚀",
+    "prototype": "🧪",
+    "redpen": "🖊️",
+    "research": "🔬",
+    "retro": "🔄",
+    "security-and-hardening": "🛡️",
+    "skill-creator": "🛠️",
+    "teach": "🎓",
+    "theme-factory": "🌌",
+    "using-agent-skills": "📖",
+    "wait-what": "🤔",
+    "web-artifacts-builder": "🏗️",
+    "wizard": "🧙",
+    "writing-for-agents": "📝",
+}
 
 # A skill row: | [name](https://github.com/<owner>/<repo>/tree/<branch>/<path>) | <repo> | <load> |
 ROW_RE = re.compile(
@@ -81,6 +121,10 @@ def local_skills() -> dict:
 def main() -> int:
     skills = referenced_skills()
     skills.update(local_skills())  # local wins on a clash
+    for name, entry in skills.items():
+        if name not in EMOJI:
+            print(f"WARNING: no emoji for {name} (using ✨; add it to EMOJI)", file=sys.stderr)
+        entry["emoji"] = EMOJI.get(name, "✨")
     registry = {
         "version": 1,
         "generated_from": f"REFERENCES.md + skills/ on main of {LOCAL_REPO}",
