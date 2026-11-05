@@ -51,6 +51,7 @@ A level sets **depth**; a specifier sets **shape**. Specifiers stack freely with
 ### What counts as a specifier
 
 - A specifier word used as a label or prefix (`[Think]`, `Options:`, "Task 2 (Draft)"), or plainly instructing how to do the work ("think through the approach first", "give me options", "what are my options for…", "do these in parallel", "make this reusable afterwards", "just draft it, don't send it", "show me what it looks like", "exactly 10, no substitutes").
+- Combinations may be written with commas, plus signs, or "and": "Hard, Parallel, Options:", "Hard + Parallel", and "Quick and Strict" all mean the same combination. The same separators work inside per-item parentheses: "Task 2 (Quick, Draft)".
 - **Not a specifier:** the word appearing in content about something else ("I think the dark theme is right" is the user's opinion, not Think; "the draft policy document"; "automatic updates"; "visual arts"), or describing a property of the thing itself. Bracketed or labelled specifiers are always intentional; a bare inline word that reads either way is not a specifier.
 - Matching is case-insensitive.
 
@@ -116,3 +117,7 @@ Behaviour: plan the research, fan the three neighbourhoods out to subagents, ite
 **Example 11 — Not a specifier**
 Input: "I think the Midnight Galaxy theme is the right one — apply it"
 Behaviour: "think" here is the user's opinion, not the Think specifier: no approach statement, no wait. Apply the theme at the default Medium.
+
+**Example 12 — Comma-separated combination**
+Input: "Hard, Parallel, Options: plan a weekend trip to Brighton"
+Behaviour: the commas mean the same as plus signs — Hard + Parallel + Options. Plan the research, fan transport, stay, and things to do out to subagents, iterate and verify, then present at least 4 trip options, each with a one-line trade-off, and wait for the pick.
