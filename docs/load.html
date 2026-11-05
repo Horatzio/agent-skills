@@ -4,6 +4,59 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Load skill — Horatzio/agent-skills</title>
+<style>
+  /* Midnight Galaxy (theme-factory): Deep Purple #2b1e3e, Cosmic Blue #4a4e8f,
+     Lavender #a490c2, Silver #e6e6fa. Headers FreeSans Bold, body FreeSans. */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 3rem 1.5rem;
+    color: #e6e6fa;
+    background-color: #2b1e3e;
+    background-image:
+      radial-gradient(1px 1px at 12% 22%, #e6e6fa 100%, transparent 0),
+      radial-gradient(1px 1px at 78% 12%, #a490c2 100%, transparent 0),
+      radial-gradient(1.5px 1.5px at 34% 68%, #e6e6fa 100%, transparent 0),
+      radial-gradient(1px 1px at 62% 84%, #a490c2 100%, transparent 0),
+      radial-gradient(1px 1px at 90% 55%, #e6e6fa 100%, transparent 0),
+      radial-gradient(1.5px 1.5px at 5% 78%, #a490c2 100%, transparent 0),
+      radial-gradient(ellipse at 50% -10%, #4a4e8f 0%, transparent 60%);
+    background-repeat: no-repeat;
+    font-family: 'FreeSans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  h1 {
+    max-width: 46rem;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    letter-spacing: 0.01em;
+  }
+  #status {
+    max-width: 46rem;
+    margin: 0 auto 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(74, 78, 143, 0.35);
+    border: 1px solid #4a4e8f;
+    border-radius: 12px;
+  }
+  #detail {
+    max-width: 46rem;
+    margin: 0 auto;
+  }
+  #detail p { margin: 0.75rem 0; }
+  a { color: #a490c2; }
+  a:hover { color: #e6e6fa; }
+  strong { color: #ffffff; }
+  code {
+    padding: 0.1em 0.35em;
+    background: rgba(74, 78, 143, 0.55);
+    border-radius: 6px;
+    font-size: 0.95em;
+  }
+  ul { padding-left: 1.25rem; }
+  li { margin: 0.35rem 0; }
+</style>
 </head>
 <body>
 <h1>Load skill</h1>
