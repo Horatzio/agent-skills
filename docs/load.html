@@ -32,6 +32,12 @@
     font-size: 2rem;
     letter-spacing: 0.01em;
   }
+  h2 {
+    max-width: 46rem;
+    margin: 2rem auto 1rem;
+    font-size: 1.4rem;
+    letter-spacing: 0.01em;
+  }
   #status {
     max-width: 46rem;
     margin: 0 auto 1rem;
@@ -61,12 +67,15 @@
   .card .emoji { font-size: 1.25rem; margin-right: 0.35rem; }
   .card a.repo { font-weight: 400; }
   .card.own { border-top-color: #a490c2; }
+  .card.skillbook { border-top-color: #d4af37; }
   .card a { font-weight: 700; text-decoration: none; }
   .card a:hover { text-decoration: underline; }
   .card .repo { display: block; margin-top: auto; font-size: 0.85rem; opacity: 0.8; }
+  .card .desc { font-size: 0.9rem; opacity: 0.85; margin: 0.5rem 0 0; }
   .badge { display: inline-block; margin-left: 0.5rem; padding: 0.1em 0.55em; border-radius: 999px; font-size: 0.75rem; font-weight: 700; vertical-align: middle; }
   .badge.own { background: #a490c2; color: #2b1e3e; }
   .badge.ref { background: #4a4e8f; color: #e6e6fa; }
+  .badge.book { background: #d4af37; color: #2b1e3e; }
   .legend { font-size: 0.9rem; }
   .legend .badge { margin-left: 0; margin-right: 0.25rem; }
 </style>
@@ -83,6 +92,7 @@
   3. Look the name up under "skills" (keys are lowercase kebab-case; a local skill wins over a reference on a clash).
   4. Fetch that entry's "raw_url" — it is the skill's SKILL.md. Load its contents as the skill's instructions.
   5. If the name is absent, the skill is not in Horatzio/agent-skills; say so and list the available names from skills.json.
+  Skillbooks (curated skill sets for one area) are listed in skillbooks.json in this same directory.
 -->
 
 <script>
@@ -128,13 +138,45 @@
     return legend + '<div class="skill-grid">' + cards + '</div>';
   }
 
+  // skillbooks.json candidates: same directory guesses as the registry
+  var bookUrls = [];
+  candidates.forEach(function (u) { bookUrls.push(u.replace(/skills\.json$/, 'skillbooks.json')); });
+
+  function skillbookGrid(books) {
+    var names = Object.keys(books).sort();
+    if (!names.length) return '';
+    var cards = names.map(function (n) {
+      var b = books[n];
+      var raw = b.description || '';
+      if (raw.length > 120) raw = raw.slice(0, 120).replace(/\s+\S*$/, '') + '…';
+      var desc = raw ? esc(raw) : '';
+      return '<article class="card skillbook"><span class="emoji">📚</span><a href="' + esc(b.url) + '">' + esc(b.title) + '</a>' +
+        '<span class="badge book">Skillbook</span>' +
+        (desc ? '<p class="desc">' + desc + '</p>' : '') +
+        '<a class="repo" href="' + esc(b.url) + '">skillbooks/' + esc(n) + '.md</a></article>';
+    }).join('');
+    return '<h2>Skillbooks</h2><p class="legend"><span class="badge book">Skillbook</span> a curated set of skills for one area, from the skill-scout workflow</p><div class="skill-grid">' + cards + '</div>';
+  }
+
+  function fetchSkillbooks(i) {
+    if (i >= bookUrls.length) return;
+    fetch(bookUrls[i]).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function (doc) {
+      var html = skillbookGrid(doc.skillbooks || {});
+      if (html) detailEl.insertAdjacentHTML('beforeend', html);
+    }).catch(function () { fetchSkillbooks(i + 1); });
+  }
+
   function render(reg) {
     var skills = reg.skills || {};
     var names = Object.keys(skills).sort();
 
     if (!name) {
-      statusEl.innerHTML = 'No skill specified. Use <code>?s=&lt;skill-name&gt;</code> — available skills:';
+      statusEl.innerHTML = 'No skill specified. Use <code>?s=&lt;skill-name&gt;</code> — available skills and skillbooks:';
       detailEl.innerHTML = cardGrid(skills, names);
+      fetchSkillbooks(0);
       return;
     }
 
@@ -142,6 +184,7 @@
     if (!entry) {
       statusEl.textContent = 'Skill not found: ' + name;
       detailEl.innerHTML = cardGrid(skills, names);
+      fetchSkillbooks(0);
       return;
     }
 
@@ -150,7 +193,7 @@
     detailEl.innerHTML =
       '<p><a href="' + esc(entry.raw_url) + '">Raw SKILL.md</a> · ' +
       '<a href="' + esc(entry.source_url) + '">View on GitHub</a></p>' +
-      '<p>Agent: fetch the Raw SKILL.md URL above and follow it as the skill\u2019s instructions.</p>';
+      '<p>Agent: fetch the Raw SKILL.md URL above and follow it as the skill’s instructions.</p>';
     setTimeout(function () { window.location.replace(entry.raw_url); }, 1200);
   }
 
