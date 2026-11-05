@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Regenerate docs/skills.json from REFERENCES.md + skills/ on main.
+"""Regenerate docs/skills.json and docs/skillbooks.json from REFERENCES.md,
+skills/ and skillbooks/ on main.
 
 Usage: python scripts/generate_skills_json.py   (run from the repo root)
 
@@ -15,6 +16,9 @@ Rules (see LOADING.md):
   cards in docs/load.html). Unmapped names get a sparkle and a warning so
   the gap is visible at generation time — add the emoji here, not in
   skills.json by hand, or the next regeneration wipes it.
+- Skillbooks are every skillbooks/*.md except README.md: name from the
+  filename, title and description from the file ("# Skillbook: <area>" plus
+  the first non-empty line after it), url the GitHub blob URL.
 - Output keys are sorted; formatting is json.dump with indent=2.
 """
 
@@ -26,7 +30,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 REFERENCES = ROOT / "REFERENCES.md"
 SKILLS_DIR = ROOT / "skills"
+SKILLBOOKS_DIR = ROOT / "skillbooks"
 OUTPUT = ROOT / "docs" / "skills.json"
+BOOKS_OUTPUT = ROOT / "docs" / "skillbooks.json"
 
 LOCAL_REPO = "Horatzio/agent-skills"
 
@@ -57,6 +63,7 @@ EMOJI = {
     "retro": "🔄",
     "security-and-hardening": "🛡️",
     "skill-creator": "🛠️",
+    "skill-scout": "🧭",
     "teach": "🎓",
     "theme-factory": "🌌",
     "using-agent-skills": "📖",
@@ -118,6 +125,28 @@ def local_skills() -> dict:
     return skills
 
 
+def skillbooks() -> dict:
+    books = {}
+    if not SKILLBOOKS_DIR.is_dir():
+        return books
+    for f in sorted(SKILLBOOKS_DIR.glob("*.md")):
+        if f.name == "README.md":
+            continue
+        lines = [ln.strip() for ln in f.read_text().splitlines()]
+        title = next((ln[12:].strip() for ln in lines if ln.startswith("# Skillbook: ")), f.stem)
+        try:
+            h1 = next(i for i, ln in enumerate(lines) if ln.startswith("# Skillbook: "))
+        except StopIteration:
+            h1 = 0
+        desc = next((ln for ln in lines[h1 + 1:] if ln), "")
+        books[f.stem] = {
+            "title": title,
+            "description": desc,
+            "url": f"https://github.com/{LOCAL_REPO}/blob/main/skillbooks/{f.name}",
+        }
+    return books
+
+
 def main() -> int:
     skills = referenced_skills()
     skills.update(local_skills())  # local wins on a clash
@@ -135,6 +164,15 @@ def main() -> int:
     n_ref = sum(1 for s in skills.values() if s["type"] == "reference")
     n_local = sum(1 for s in skills.values() if s["type"] == "local")
     print(f"Wrote {OUTPUT} ({len(skills)} skills: {n_local} local, {n_ref} referenced)")
+    books = skillbooks()
+    books_doc = {
+        "version": 1,
+        "generated_from": f"skillbooks/ on main of {LOCAL_REPO}",
+        "note": "One entry per skillbook file (README.md excluded). Regenerate when skillbooks/ changes.",
+        "skillbooks": {name: books[name] for name in sorted(books)},
+    }
+    BOOKS_OUTPUT.write_text(json.dumps(books_doc, indent=2) + "\n")
+    print(f"Wrote {BOOKS_OUTPUT} ({len(books)} skillbooks)")
     return 0
 
 
