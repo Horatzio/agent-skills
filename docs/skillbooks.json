@@ -4,7 +4,7 @@
   "note": "One entry per skillbook file (README.md excluded). Regenerate when skillbooks/ changes.",
   "skillbooks": {
     "threejs-visualizer": {
-      "title": "ThreeJS interactive visualizer — a net of stars in space",
+      "title": "ThreeJS interactive visualizer \u2014 a net of stars in space",
       "description": "Skills for building a ThreeJS interactive visualizer: a net of stars in space, shifting and moving around. Aesthetic: glory, misty.",
       "url": "https://github.com/Horatzio/agent-skills/blob/main/skillbooks/threejs-visualizer.md"
     }
