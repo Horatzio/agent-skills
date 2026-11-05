@@ -1,0 +1,40 @@
+name: Regenerate skills registry
+
+# Keeps docs/skills.json in sync with REFERENCES.md and skills/ on main, so
+# the Pages load page never goes stale (e.g. a merged skill missing from the
+# registry). Runs the committed generator, then commits the result back to
+# main only when it actually changed.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "REFERENCES.md"
+      - "skills/**"
+      - "scripts/generate_skills_json.py"
+      - ".github/workflows/regenerate-skills.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Regenerate docs/skills.json
+        run: python scripts/generate_skills_json.py
+      - name: Commit updated registry if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet docs/skills.json; then
+            git add docs/skills.json
+            git commit -m "Regenerate skills.json"
+            git push
+          else
+            echo "Registry already up to date."
+          fi
