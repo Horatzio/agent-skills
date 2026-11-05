@@ -56,6 +56,17 @@
   }
   ul { padding-left: 1.25rem; }
   li { margin: 0.35rem 0; }
+  .skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 0.75rem; margin: 1rem 0; }
+  .card { background: rgba(74, 78, 143, 0.35); border: 1px solid #4a4e8f; border-top: 3px solid #4a4e8f; border-radius: 12px; padding: 0.9rem 1rem; }
+  .card.own { border-top-color: #a490c2; }
+  .card a { font-weight: 700; text-decoration: none; }
+  .card a:hover { text-decoration: underline; }
+  .card .repo { display: block; margin-top: 0.25rem; font-size: 0.85rem; opacity: 0.8; }
+  .badge { display: inline-block; margin-left: 0.5rem; padding: 0.1em 0.55em; border-radius: 999px; font-size: 0.75rem; font-weight: 700; vertical-align: middle; }
+  .badge.own { background: #a490c2; color: #2b1e3e; }
+  .badge.ref { background: #4a4e8f; color: #e6e6fa; }
+  .legend { font-size: 0.9rem; }
+  .legend .badge { margin-left: 0; margin-right: 0.25rem; }
 </style>
 </head>
 <body>
@@ -103,24 +114,31 @@
     }).then(render).catch(function () { fetchRegistry(i + 1); });
   }
 
+  function cardGrid(skills, names) {
+    var legend = '<p class="legend"><span class="badge own">Own</span> created in this repo &nbsp;·&nbsp; <span class="badge ref">Referenced</span> from other repos</p>';
+    var cards = names.map(function (n) {
+      var own = skills[n].type === 'local';
+      return '<article class="card ' + (own ? 'own' : 'ref') + '"><a href="?s=' + encodeURIComponent(n) + '">' + esc(n) + '</a>' +
+        '<span class="badge ' + (own ? 'own' : 'ref') + '">' + (own ? 'Own' : 'Referenced') + '</span>' +
+        '<span class="repo">' + esc(skills[n].source_repo) + '</span></article>';
+    }).join('');
+    return legend + '<div class="skill-grid">' + cards + '</div>';
+  }
+
   function render(reg) {
     var skills = reg.skills || {};
     var names = Object.keys(skills).sort();
 
     if (!name) {
       statusEl.innerHTML = 'No skill specified. Use <code>?s=&lt;skill-name&gt;</code> — available skills:';
-      detailEl.innerHTML = '<ul>' + names.map(function (n) {
-        return '<li><a href="?s=' + encodeURIComponent(n) + '">' + esc(n) + '</a> (' + esc(skills[n].type) + ')</li>';
-      }).join('') + '</ul>';
+      detailEl.innerHTML = cardGrid(skills, names);
       return;
     }
 
     var entry = skills[name];
     if (!entry) {
       statusEl.textContent = 'Skill not found: ' + name;
-      detailEl.innerHTML = '<p>Available skills: ' + names.map(function (n) {
-        return '<a href="?s=' + encodeURIComponent(n) + '">' + esc(n) + '</a>';
-      }).join(', ') + '</p>';
+      detailEl.innerHTML = cardGrid(skills, names);
       return;
     }
 
