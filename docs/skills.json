@@ -120,7 +120,7 @@
       "source_repo": "addyosmani/agent-skills",
       "source_url": "https://github.com/addyosmani/agent-skills/tree/main/skills/interview-me",
       "raw_url": "https://raw.githubusercontent.com/addyosmani/agent-skills/main/skills/interview-me/SKILL.md",
-      "load": "Addy Osmani short form",
+      "load": "Matt Pocock short form",
       "emoji": "\ud83c\udfa4"
     },
     "performance-optimization": {
@@ -178,6 +178,14 @@
       "raw_url": "https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md",
       "load": "Anthropic short form",
       "emoji": "\ud83d\udee0\ufe0f"
+    },
+    "skill-scout": {
+      "type": "local",
+      "source_repo": "Horatzio/agent-skills",
+      "source_url": "https://github.com/Horatzio/agent-skills/tree/main/skills/skill-scout",
+      "raw_url": "https://raw.githubusercontent.com/Horatzio/agent-skills/main/skills/skill-scout/SKILL.md",
+      "load": "npx skills add Horatzio/agent-skills --skill skill-scout",
+      "emoji": "\ud83e\udded"
     },
     "teach": {
       "type": "reference",
