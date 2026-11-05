@@ -19,7 +19,7 @@
       radial-gradient(1px 1px at 78% 12%, #a490c2 100%, transparent 0),
       radial-gradient(1.5px 1.5px at 34% 68%, #e6e6fa 100%, transparent 0),
       radial-gradient(1px 1px at 62% 84%, #a490c2 100%, transparent 0),
-      radial-gradient(1px 1px at 90% 55%, #e6e6fa 100%, transparent 0),
+      radial-gradient(1px 1px at 90% 55%, #a490c2 100%, transparent 0),
       radial-gradient(1.5px 1.5px at 5% 78%, #a490c2 100%, transparent 0),
       radial-gradient(ellipse at 50% -10%, #4a4e8f 0%, transparent 60%);
     background-repeat: no-repeat;
@@ -57,11 +57,13 @@
   ul { padding-left: 1.25rem; }
   li { margin: 0.35rem 0; }
   .skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 0.75rem; margin: 1rem 0; }
-  .card { background: rgba(74, 78, 143, 0.35); border: 1px solid #4a4e8f; border-top: 3px solid #4a4e8f; border-radius: 12px; padding: 0.9rem 1rem; }
+  .card { background: rgba(74, 78, 143, 0.35); border: 1px solid #4a4e8f; border-top: 3px solid #4a4e8f; border-radius: 12px; padding: 0.9rem 1rem; aspect-ratio: 1 / 1; display: flex; flex-direction: column; }
+  .card .emoji { font-size: 1.25rem; margin-right: 0.35rem; }
+  .card a.repo { font-weight: 400; }
   .card.own { border-top-color: #a490c2; }
   .card a { font-weight: 700; text-decoration: none; }
   .card a:hover { text-decoration: underline; }
-  .card .repo { display: block; margin-top: 0.25rem; font-size: 0.85rem; opacity: 0.8; }
+  .card .repo { display: block; margin-top: auto; font-size: 0.85rem; opacity: 0.8; }
   .badge { display: inline-block; margin-left: 0.5rem; padding: 0.1em 0.55em; border-radius: 999px; font-size: 0.75rem; font-weight: 700; vertical-align: middle; }
   .badge.own { background: #a490c2; color: #2b1e3e; }
   .badge.ref { background: #4a4e8f; color: #e6e6fa; }
@@ -118,9 +120,10 @@
     var legend = '<p class="legend"><span class="badge own">Own</span> created in this repo &nbsp;·&nbsp; <span class="badge ref">Referenced</span> from other repos</p>';
     var cards = names.map(function (n) {
       var own = skills[n].type === 'local';
-      return '<article class="card ' + (own ? 'own' : 'ref') + '"><a href="?s=' + encodeURIComponent(n) + '">' + esc(n) + '</a>' +
+      var emoji = skills[n].emoji ? '<span class="emoji">' + esc(skills[n].emoji) + '</span>' : '';
+      return '<article class="card ' + (own ? 'own' : 'ref') + '">' + emoji + '<a href="?s=' + encodeURIComponent(n) + '">' + esc(n) + '</a>' +
         '<span class="badge ' + (own ? 'own' : 'ref') + '">' + (own ? 'Own' : 'Referenced') + '</span>' +
-        '<span class="repo">' + esc(skills[n].source_repo) + '</span></article>';
+        '<a class="repo" href="' + esc(skills[n].source_url) + '">' + esc(skills[n].source_repo) + '</a></article>';
     }).join('');
     return legend + '<div class="skill-grid">' + cards + '</div>';
   }
@@ -142,7 +145,7 @@
       return;
     }
 
-    statusEl.innerHTML = 'Skill found: <strong>' + esc(name) + '</strong> (' + esc(entry.type) +
+    statusEl.innerHTML = 'Skill found: ' + (entry.emoji ? esc(entry.emoji) + ' ' : '') + '<strong>' + esc(name) + '</strong> (' + esc(entry.type) +
       ', from ' + esc(entry.source_repo) + '). Redirecting to its SKILL.md…';
     detailEl.innerHTML =
       '<p><a href="' + esc(entry.raw_url) + '">Raw SKILL.md</a> · ' +
