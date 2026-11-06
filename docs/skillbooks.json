@@ -3,6 +3,11 @@
   "generated_from": "skillbooks/ on main of Horatzio/agent-skills",
   "note": "One entry per skillbook file (README.md excluded). Regenerate when skillbooks/ changes.",
   "skillbooks": {
+    "system1-reviewers-classifiers": {
+      "title": "System 1 models for fast reviewers and classifiers",
+      "description": "Skills for operating small, fast, cheap models (Haiku-class, GPT-mini-class, Gemini Flash-class, small open models) as reviewers and classifiers \u2014 prompting and structured outputs, review and classification harnesses, evaluation and calibration, routing and escalation, scale, and guardrails.",
+      "url": "https://github.com/Horatzio/agent-skills/blob/main/skillbooks/system1-reviewers-classifiers.md"
+    },
     "threejs-visualizer": {
       "title": "ThreeJS interactive visualizer \u2014 a net of stars in space",
       "description": "Skills for building a ThreeJS interactive visualizer: a net of stars in space, shifting and moving around. Aesthetic: glory, misty.",
