@@ -107,6 +107,14 @@
       "load": "Matt Pocock short form",
       "emoji": "\ud83d\udce4"
     },
+    "i-have-adhd": {
+      "type": "local",
+      "source_repo": "Horatzio/agent-skills",
+      "source_url": "https://github.com/Horatzio/agent-skills/tree/main/skills/i-have-adhd",
+      "raw_url": "https://raw.githubusercontent.com/Horatzio/agent-skills/main/skills/i-have-adhd/SKILL.md",
+      "load": "npx skills add Horatzio/agent-skills --skill i-have-adhd",
+      "emoji": "\ud83e\udde0"
+    },
     "idea-refine": {
       "type": "reference",
       "source_repo": "addyosmani/agent-skills",
@@ -186,6 +194,14 @@
       "raw_url": "https://raw.githubusercontent.com/Horatzio/agent-skills/main/skills/skill-scout/SKILL.md",
       "load": "npx skills add Horatzio/agent-skills --skill skill-scout",
       "emoji": "\ud83e\udded"
+    },
+    "system1-rubric": {
+      "type": "local",
+      "source_repo": "Horatzio/agent-skills",
+      "source_url": "https://github.com/Horatzio/agent-skills/tree/main/skills/system1-rubric",
+      "raw_url": "https://raw.githubusercontent.com/Horatzio/agent-skills/main/skills/system1-rubric/SKILL.md",
+      "load": "npx skills add Horatzio/agent-skills --skill system1-rubric",
+      "emoji": "\ud83d\udccb"
     },
     "teach": {
       "type": "reference",
