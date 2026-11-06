@@ -64,6 +64,7 @@ EMOJI = {
     "security-and-hardening": "🛡️",
     "skill-creator": "🛠️",
     "skill-scout": "🧭",
+      "system1-rubric": "📋",
     "teach": "🎓",
     "theme-factory": "🌌",
     "using-agent-skills": "📖",
