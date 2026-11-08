@@ -163,6 +163,14 @@
       "load": "npx skills add Horatzio/agent-skills --skill redpen",
       "emoji": "\ud83d\udd8a\ufe0f"
     },
+    "reminder": {
+      "type": "local",
+      "source_repo": "Horatzio/agent-skills",
+      "source_url": "https://github.com/Horatzio/agent-skills/tree/main/skills/reminder",
+      "raw_url": "https://raw.githubusercontent.com/Horatzio/agent-skills/main/skills/reminder/SKILL.md",
+      "load": "npx skills add Horatzio/agent-skills --skill reminder",
+      "emoji": "\ud83d\udd14"
+    },
     "research": {
       "type": "reference",
       "source_repo": "mattpocock/skills",
