@@ -85,6 +85,16 @@
   .badge.book { background: #d4af37; color: #2b1e3e; }
   .legend { font-size: 0.9rem; }
   .legend .badge { margin-left: 0; margin-right: 0.25rem; }
+  .back-link { font-weight: 700; text-decoration: none; margin-right: 0.5rem; }
+  .skill-doc h1 { font-size: 1.6rem; margin: 1.5rem auto 1rem; }
+  .skill-doc h2 { font-size: 1.3rem; }
+  .skill-doc h3 { font-size: 1.1rem; }
+  .skill-doc pre { padding: 0.75rem 1rem; background: rgba(43, 30, 62, 0.8); border: 1px solid #4a4e8f; border-radius: 8px; overflow-x: auto; }
+  .skill-doc pre code { padding: 0; background: none; }
+  .skill-doc table { border-collapse: collapse; margin: 1rem 0; }
+  .skill-doc th, .skill-doc td { padding: 0.35rem 0.75rem; border: 1px solid #4a4e8f; text-align: left; }
+  .skill-doc blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 3px solid #a490c2; opacity: 0.9; }
+  .skill-doc hr { border: none; border-top: 1px solid #4a4e8f; margin: 1.5rem 0; }
 </style>
 </head>
 <body>
@@ -94,15 +104,18 @@
 <div id="detail"></div>
 
 <!--
-  AGENT PROTOCOL — if you are an AI agent and JavaScript did not run:
-  1. Read the "skill" name from this page's URL: ?s=<name> (or ?skill=<name>, or /load/<name>).
-  2. Fetch skills.json from this same directory (e.g. https://horatzio.github.io/agent-skills/skills.json).
-  3. Look the name up under "skills" (keys are lowercase kebab-case; a local skill wins over a reference on a clash).
-  4. Fetch that entry's "raw_url" — it is the skill's SKILL.md. Load its contents as the skill's instructions.
-  5. If the name is absent, the skill is not in Horatzio/agent-skills; say so and list the available names from skills.json.
+  AGENT PROTOCOL — this page is a single-page app (load.html):
+  - With no ?s= it lists all skills; with ?s=<name> it renders that skill in place.
+  - If you are an AI agent and JavaScript did not run:
+    1. Read the "skill" name from this page's URL: ?s=<name> (or ?skill=<name>, or /load/<name>).
+    2. Fetch skills.json from this same directory (e.g. https://horatzio.github.io/agent-skills/skills.json).
+    3. Look the name up under "skills" (keys are lowercase kebab-case; a local skill wins over a reference on a clash).
+    4. Fetch that entry's "raw_url" — it is the skill's SKILL.md. Load its contents as the skill's instructions.
+    5. If the name is absent, the skill is not in Horatzio/agent-skills; say so and list the available names from skills.json.
   Skillbooks (curated skill sets for one area) are listed in skillbooks.json in this same directory.
 -->
 
+<script src="vendor/marked.min.js"></script>
 <script>
 (function () {
   var statusEl = document.getElementById('status');
@@ -114,14 +127,18 @@
     });
   }
 
-  var params = new URLSearchParams(window.location.search);
-  var name = (params.get('s') || params.get('skill') || '').trim().toLowerCase();
+  function nameFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    return (params.get('s') || params.get('skill') || '').trim().toLowerCase();
+  }
 
   // skills.json candidates: relative to this page first, then site-root guesses
   var base = window.location.pathname.replace(/[^/]*$/, '');
   var candidates = [base + 'skills.json', 'skills.json', '../skills.json', '/agent-skills/skills.json'];
   var seen = {}, urls = [];
   candidates.forEach(function (u) { if (!seen[u]) { seen[u] = 1; urls.push(u); } });
+
+  var reg = null; // cached registry, fetched once; client-side routing reuses it
 
   function fetchRegistry(i) {
     if (i >= urls.length) {
@@ -131,7 +148,10 @@
     fetch(urls[i]).then(function (r) {
       if (!r.ok) throw new Error(r.status);
       return r.json();
-    }).then(render).catch(function () { fetchRegistry(i + 1); });
+    }).then(function (doc) {
+      reg = doc;
+      render();
+    }).catch(function () { fetchRegistry(i + 1); });
   }
 
   function cardGrid(skills, names) {
@@ -177,9 +197,31 @@
     }).catch(function () { fetchSkillbooks(i + 1); });
   }
 
-  function render(reg) {
-    var skills = reg.skills || {};
+  function renderSkill(entry, name) {
+    statusEl.innerHTML = '<a class="back-link" href="load.html">&larr; All skills</a> ' +
+      (entry.emoji ? esc(entry.emoji) + ' ' : '') + '<strong>' + esc(name) + '</strong> (' + esc(entry.type) +
+      ', from ' + esc(entry.source_repo) + ') &middot; <a href="' + esc(entry.raw_url) + '">Raw SKILL.md</a> &middot; ' +
+      '<a href="' + esc(entry.source_url) + '">View on GitHub</a>';
+    detailEl.innerHTML = '<p>Loading skill…</p>';
+    fetch(entry.raw_url).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.text();
+    }).then(function (md) {
+      if (typeof marked !== 'undefined' && marked.parse) {
+        detailEl.innerHTML = '<div class="skill-doc">' + marked.parse(md) + '</div>';
+      } else {
+        detailEl.innerHTML = '<pre>' + esc(md) + '</pre>';
+      }
+    }).catch(function () {
+      detailEl.innerHTML = '<p>Could not load the skill from its source. Read it directly: ' +
+        '<a href="' + esc(entry.raw_url) + '">Raw SKILL.md</a></p>';
+    });
+  }
+
+  function render() {
+    var skills = (reg && reg.skills) || {};
     var names = Object.keys(skills).sort();
+    var name = nameFromUrl();
 
     if (!name) {
       statusEl.innerHTML = 'No skill specified. Use <code>?s=&lt;skill-name&gt;</code> — available skills and skillbooks:';
@@ -196,14 +238,33 @@
       return;
     }
 
-    statusEl.innerHTML = 'Skill found: ' + (entry.emoji ? esc(entry.emoji) + ' ' : '') + '<strong>' + esc(name) + '</strong> (' + esc(entry.type) +
-      ', from ' + esc(entry.source_repo) + '). Redirecting to its SKILL.md…';
-    detailEl.innerHTML =
-      '<p><a href="' + esc(entry.raw_url) + '">Raw SKILL.md</a> · ' +
-      '<a href="' + esc(entry.source_url) + '">View on GitHub</a></p>' +
-      '<p>Agent: fetch the Raw SKILL.md URL above and follow it as the skill\u2019s instructions.</p>';
-    setTimeout(function () { window.location.replace(entry.raw_url); }, 1200);
+    renderSkill(entry, name);
   }
+
+  function navigate(name) {
+    var url = name ? '?s=' + encodeURIComponent(name) : 'load.html';
+    history.pushState(null, '', url);
+    window.scrollTo(0, 0);
+    render();
+  }
+
+  // Client-side routing: skill links and the back link render in place,
+  // without a page reload. External links (repos, skillbooks) behave normally.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a') : null;
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    if (a.classList.contains('back-link')) {
+      e.preventDefault();
+      navigate(null);
+    } else if (href.charAt(0) === '?') {
+      var q = new URLSearchParams(href.slice(1));
+      var n = (q.get('s') || q.get('skill') || '').trim().toLowerCase();
+      if (n) { e.preventDefault(); navigate(n); }
+    }
+  });
+
+  window.addEventListener('popstate', function () { render(); });
 
   fetchRegistry(0);
 })();
