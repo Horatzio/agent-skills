@@ -60,7 +60,7 @@ EMOJI = {
     "performance-optimization": "🚀",
     "prototype": "🧪",
     "redpen": "🖊️",
-  "reminder": "🔔",
+    "reminder": "🔔",
     "research": "🔬",
     "retro": "🔄",
     "security-and-hardening": "🛡️",
