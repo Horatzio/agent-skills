@@ -131,6 +131,14 @@
       "load": "Addy Osmani short form",
       "emoji": "\ud83c\udfa4"
     },
+    "lay-foundation": {
+      "type": "local",
+      "source_repo": "Horatzio/agent-skills",
+      "source_url": "https://github.com/Horatzio/agent-skills/tree/main/skills/lay-foundation",
+      "raw_url": "https://raw.githubusercontent.com/Horatzio/agent-skills/main/skills/lay-foundation/SKILL.md",
+      "load": "npx skills add Horatzio/agent-skills --skill lay-foundation",
+      "emoji": "\ud83e\uddf1"
+    },
     "performance-optimization": {
       "type": "reference",
       "source_repo": "addyosmani/agent-skills",
