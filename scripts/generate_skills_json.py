@@ -56,7 +56,7 @@ EMOJI = {
     "i-have-adhd": "🧠",
     "idea-refine": "💡",
     "interview-me": "🎤",
-      "lay-foundation": "🧱",
+    "lay-foundation": "🧱",
     "performance-optimization": "🚀",
     "prototype": "🧪",
     "redpen": "🖊️",
