@@ -1,6 +1,6 @@
 ---
 name: effort
-description: Scale effort to the user's effort keywords and specifiers, and split multi-item prompts into individually tracked tasks. Use this skill whenever the user labels work with an effort keyword — Fast, Quick, Easy, Medium, Hard, Complex, or Comprehensive — as a prefix or label like [Quick], [Complex] or "Complex:", or with a specifier — Parallel, Think, Plan, Options, Automate, Draft, Visual, or Strict — or applies one to an item in a list, and whenever a prompt contains multiple action items labelled Task 1 / Item 1 / Action 1 or set out as a plain numbered list, even when no effort keyword appears. A keyword inside an idiom or describing an object ("quick question", "hard drive", "medium-rare") is not a label and does not trigger this skill by itself.
+description: Scale effort to the user's effort keywords and specifiers, and split multi-item prompts into individually tracked tasks. Use this skill whenever the user labels work with an effort keyword — Fast, Quick, Easy, Medium, Hard, Complex, or Comprehensive — as a prefix or label like [Quick], [Complex] or "Complex:", or with a specifier — Parallel, Think, Plan, Options, Automate, Draft, Visual, Strict, Reminder, or Introspect — or applies one to an item in a list, and whenever a prompt contains multiple action items labelled Task 1 / Item 1 / Action 1 or set out as a plain numbered list, even when no effort keyword appears. A keyword inside an idiom or describing an object ("quick question", "hard drive", "medium-rare") is not a label and does not trigger this skill by itself.
 ---
 
 # Effort
@@ -48,10 +48,12 @@ A level sets **depth**; a specifier sets **shape**. Specifiers stack freely with
 | **Draft** | Prepare, don't commit | Do all the preparation, but change, send, publish, book, merge, or commit nothing. Show the result first and wait. |
 | **Visual** | Show, don't just tell | The result includes a picture, diagram, or map inline in chat, not as an attachment. |
 | **Strict** | Literal, no substitutes | Counts, scopes, and constraints are literal. No substitutes, no near-misses presented as matches, no bluffing a no-match: say plainly when something doesn't exist or falls short, and verify untouched parts are unchanged when the task says to leave them alone. |
+| **Reminder** | Remember this for next time | After the task completes successfully, save what needs to be remembered for future runs of the same thing — a preference, a rule, a gotcha, a fact the agent got wrong and was corrected on — using the `reminder` skill, which knows where in the agent's context each kind of thing belongs. Save only what is durable and future-relevant; a one-off detail is not a reminder. Tell the user what was saved and where. |
+| **Introspect** | Look back before finishing | Before completing the task, review the trajectory of the current session — the whole workstream behind the task, not just the last turn: what was tried, what worked, what failed, what the user corrected, what changed mid-task — and complete the task with that extra info. Write the review down as a short file or a section in the deliverable, do not just hold it in mind. Do not repeat an approach the session already showed failing; encode a correction the user already made. Generally used with Automate: the introspection tells the automation what to build from — the failure modes, the corrections, the exact counts — not just the final state. On its own it is also a legitimate deliverable: a review of what happened and what it teaches, when the user wants the lesson, not the artifact. |
 
 ### What counts as a specifier
 
-- A specifier word used as a label or prefix (`[Think]`, `[Plan]`, `Options:`, "Task 2 (Draft)"), or plainly instructing how to do the work ("think through the approach first", "plan this first, don't start yet", "give me options", "what are my options for…", "do these in parallel", "make this reusable afterwards", "just draft it, don't send it", "show me what it looks like", "exactly 10, no substitutes").
+- A specifier word used as a label or prefix (`[Think]`, `[Plan]`, `Options:`, "Task 2 (Draft)"), or plainly instructing how to do the work ("think through the approach first", "plan this first, don't start yet", "give me options", "what are my options for…", "do these in parallel", "make this reusable afterwards", "just draft it, don't send it", "show me what it looks like", "exactly 10, no substitutes", "remember this for next time", "save this for when I do this again", "look back at what happened in this session first").
 - Combinations may be written with commas, plus signs, or "and": "Hard, Parallel, Options:", "Hard + Parallel", and "Quick and Strict" all mean the same combination. The same separators work inside per-item parentheses: "Task 2 (Quick, Draft)".
 - **Not a specifier:** the word appearing in content about something else ("I think the dark theme is right" is the user's opinion, not Think; "the draft policy document"; "a business plan" as a document; "automatic updates"; "visual arts"), or describing a property of the thing itself. Bracketed or labelled specifiers are always intentional; a bare inline word that reads either way is not a specifier.
 - Matching is case-insensitive.
@@ -62,7 +64,9 @@ A level sets **depth**; a specifier sets **shape**. Specifiers stack freely with
 - A specifier's explicit wait overrides the level's ask-vs-act rule for that step: Quick + Think still waits for the go-ahead, and Quick + Options still waits for the pick — the wait is the point of the specifier.
 - Think + Options combined: a single wait — present the approach as the options (each with its trade-off) and wait for the pick, rather than waiting twice.
 - Think + Plan run as two stages with a wait each: the approach is approved first, and the detailed plan is written only once the direction is agreed.
-- Draft suppresses side effects: with Draft + Automate, build the artifact but present it as a draft; do not install it until the user approves.
+- Draft suppresses side effects: with Draft + Automate, build the artifact but present it as a draft; do not install it until the user approves. With Draft + Reminder, show the reminder that would be saved ("would save: …") and save nothing until the user approves.
+- Reminder runs after success, like Automate: it saves only when the work completed — never after a failure, and never for a task that was abandoned. Reminder + Automate together means both the reusable artifact and the reminder get saved; the reminder covers what the artifact cannot (a preference, a gotcha, a rule the artifact doesn't encode).
+- Introspect runs before completion: the task is finished with the session's trajectory in view. Introspect + Automate is the canonical pairing — the artifact is built from what the session taught, not just from the final state.
 - A specifier covers its message and the work it names, like a label. Per-item specifiers win for that item; follow-ups on the same work inherit them; a new, unrelated ask resets to Medium with no specifiers.
 
 ## Multiple tasks in one prompt
@@ -127,3 +131,11 @@ Behaviour: the commas mean the same as plus signs — Hard + Parallel + Options.
 **Example 13 — Plan waits, unlike Hard**
 Input: "Plan: migrate my notes to the new system"
 Behaviour: write the migration plan — steps, order, what each step needs — and stop. Migrate nothing until the go-ahead. (Hard would plan and then proceed; Plan always waits.)
+
+**Example 14 — Reminder saves for next time**
+Input: "Reminder: when I book gigs through DICE, the entry-before-midnight price is the one that matters"
+Behaviour: do the booking research, then save the note with the `reminder` skill and say what was saved and where. A one-off price is not a reminder; the rule about which price matters is.
+
+**Example 15 — Introspect + Automate builds from the session**
+Input: "Introspect + Automate: turn this session's trip research into a reusable skill"
+Behaviour: review the session's trajectory first — which sources worked, what the user corrected, where the first approach failed — then build the skill from those lessons, not just from the final list of places. Say what the trajectory changed about the skill.
