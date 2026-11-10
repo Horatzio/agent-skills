@@ -3,6 +3,11 @@
   "generated_from": "skillbooks/ on main of Horatzio/agent-skills",
   "note": "One entry per skillbook file (README.md excluded). Regenerate when skillbooks/ changes.",
   "skillbooks": {
+    "prompt-clarification-disambiguation": {
+      "title": "Improving, clarifying and disambiguating a prompt for an agent",
+      "description": "Skills for turning a vague, ambiguous or weak prompt for an agent into a clear, precise, executable brief \u2014 clarifying, disambiguating, eliciting, rewriting, interrogating, evaluating and optimizing.",
+      "url": "https://github.com/Horatzio/agent-skills/blob/main/skillbooks/prompt-clarification-disambiguation.md"
+    },
     "system1-reviewers-classifiers": {
       "title": "System 1 models for fast reviewers and classifiers",
       "description": "Skills for operating small, fast, cheap models (Haiku-class, GPT-mini-class, Gemini Flash-class, small open models) as reviewers and classifiers \u2014 prompting and structured outputs, review and classification harnesses, evaluation and calibration, routing and escalation, scale, and guardrails.",
