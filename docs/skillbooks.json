@@ -3,6 +3,11 @@
   "generated_from": "skillbooks/ on main of Horatzio/agent-skills",
   "note": "One entry per skillbook file (README.md excluded). Regenerate when skillbooks/ changes.",
   "skillbooks": {
+    "continuous-autonomous-agent-workflows": {
+      "title": "Continuous Autonomous Agent Workflows using multiple Subagents",
+      "description": "Skills for running an agent workflow continuously and autonomously \u2014 24/7 loops, error reporting to the user, subagent fleets, file-backed state and handovers, surviving model API failures, and an arbiter observing the whole run.",
+      "url": "https://github.com/Horatzio/agent-skills/blob/main/skillbooks/continuous-autonomous-agent-workflows.md"
+    },
     "prompt-clarification-disambiguation": {
       "title": "Improving, clarifying and disambiguating a prompt for an agent",
       "description": "Skills for turning a vague, ambiguous or weak prompt for an agent into a clear, precise, executable brief \u2014 clarifying, disambiguating, eliciting, rewriting, interrogating, evaluating and optimizing.",
