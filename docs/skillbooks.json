@@ -8,6 +8,11 @@
       "description": "Skills for running an agent workflow continuously and autonomously \u2014 24/7 loops, error reporting to the user, subagent fleets, file-backed state and handovers, surviving model API failures, and an arbiter observing the whole run.",
       "url": "https://github.com/Horatzio/agent-skills/blob/main/skillbooks/continuous-autonomous-agent-workflows.md"
     },
+    "hosting-simple-websites-login-cloudflare": {
+      "title": "Hosting simple websites with login on Cloudflare",
+      "description": "Skills for hosting a simple static website on Cloudflare with a login in front of it \u2014 Pages hosting, Access login, Wrangler deploys, domains and TLS, security hardening, edge dynamics, and monitoring.",
+      "url": "https://github.com/Horatzio/agent-skills/blob/main/skillbooks/hosting-simple-websites-login-cloudflare.md"
+    },
     "prompt-clarification-disambiguation": {
       "title": "Improving, clarifying and disambiguating a prompt for an agent",
       "description": "Skills for turning a vague, ambiguous or weak prompt for an agent into a clear, precise, executable brief \u2014 clarifying, disambiguating, eliciting, rewriting, interrogating, evaluating and optimizing.",
