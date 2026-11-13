@@ -12,11 +12,17 @@
 <script>
 (function () {
   // Path form: /agent-skills/load/<skill-name> → /agent-skills/load?s=<skill-name>
+  // and /agent-skills/load/book/<slug> → /agent-skills/load?book=<slug>
   var segments = window.location.pathname.split('/').filter(function (s) { return s.length > 0; });
   var i = segments.indexOf('load');
-  if (i >= 0 && segments[i + 1]) {
+  if (i < 0) return;
+  var root = '/' + segments.slice(0, i).join('/') + (i > 0 ? '/' : '');
+  if (segments[i + 1] === 'book' && segments[i + 2]) {
+    var slug = decodeURIComponent(segments[i + 2]).toLowerCase();
+    document.getElementById('status').textContent = 'Loading skillbook: ' + slug + '…';
+    window.location.replace(root + 'load?book=' + encodeURIComponent(slug));
+  } else if (segments[i + 1]) {
     var name = decodeURIComponent(segments[i + 1]).toLowerCase();
-    var root = '/' + segments.slice(0, i).join('/') + (i > 0 ? '/' : '');
     document.getElementById('status').textContent = 'Loading skill: ' + name + '…';
     window.location.replace(root + 'load?s=' + encodeURIComponent(name));
   }

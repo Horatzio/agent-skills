@@ -113,6 +113,13 @@
     4. Fetch that entry's "raw_url" — it is the skill's SKILL.md. Load its contents as the skill's instructions.
     5. If the name is absent, the skill is not in Horatzio/agent-skills; say so and list the available names from skills.json.
   Skillbooks (curated skill sets for one area) are listed in skillbooks.json in this same directory.
+  With ?book=<slug> this page renders that skillbook in place, like a skill:
+    1. Fetch skillbooks.json from this same directory.
+    2. Look the slug up under "skillbooks".
+    3. Its "url" is the GitHub blob URL; the raw file is the same path on
+       raw.githubusercontent.com (github.com/Horatzio/agent-skills/blob/ ->
+       raw.githubusercontent.com/Horatzio/agent-skills/). Fetch it and read
+       the skillbook's table of skills.
 -->
 
 <script src="vendor/marked.min.js"></script>
@@ -130,6 +137,21 @@
   function nameFromUrl() {
     var params = new URLSearchParams(window.location.search);
     return (params.get('s') || params.get('skill') || '').trim().toLowerCase();
+  }
+
+  function bookFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    return (params.get('book') || params.get('skillbook') || '').trim().toLowerCase();
+  }
+
+  // A skillbook's registry "url" is its GitHub blob URL; the raw .md lives at
+  // the same path on raw.githubusercontent.com. Returns null for anything else.
+  function rawUrlFromBlob(blobUrl) {
+    var prefix = 'https://github.com/Horatzio/agent-skills/blob/';
+    if (blobUrl.indexOf(prefix) === 0) {
+      return 'https://raw.githubusercontent.com/Horatzio/agent-skills/' + blobUrl.slice(prefix.length);
+    }
+    return null;
   }
 
   // skills.json candidates: relative to this page first, then site-root guesses
@@ -178,7 +200,7 @@
       var raw = b.description || '';
       if (raw.length > 120) raw = raw.slice(0, 120).replace(/\s+\S*$/, '') + '…';
       var desc = raw ? esc(raw) : '';
-      return '<article class="card skillbook"><div class="title"><span class="emoji">📚</span><a href="' + esc(b.url) + '">' + esc(b.title) + '</a></div>' +
+      return '<article class="card skillbook"><div class="title"><span class="emoji">📚</span><a href="?book=' + encodeURIComponent(n) + '">' + esc(b.title) + '</a></div>' +
         '<span class="badge book">Skillbook</span>' +
         (desc ? '<p class="desc">' + desc + '</p>' : '') +
         '<a class="repo" href="' + esc(b.url) + '">skillbooks/' + esc(n) + '.md</a></article>';
@@ -218,10 +240,61 @@
     });
   }
 
+  function fetchSkillbookEntry(slug, i, onFound, onMissing) {
+    if (i >= bookUrls.length) { onMissing(); return; }
+    fetch(bookUrls[i]).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function (doc) {
+      var entry = (doc.skillbooks || {})[slug];
+      if (entry) onFound(entry); else onMissing();
+    }).catch(function () { fetchSkillbookEntry(slug, i + 1, onFound, onMissing); });
+  }
+
+  function renderBook(entry, slug) {
+    var raw = rawUrlFromBlob(entry.url || '');
+    statusEl.innerHTML = '<a class="back-link" href="load.html">&larr; All skills</a> 📚 ' +
+      '<strong>' + esc(entry.title || slug) + '</strong> <span class="badge book">Skillbook</span>' +
+      (raw ? ' &middot; <a href="' + esc(raw) + '">Raw .md</a>' : '') +
+      ' &middot; <a href="' + esc(entry.url) + '">View on GitHub</a>';
+    detailEl.innerHTML = '<p>Loading skillbook…</p>';
+    if (!raw) {
+      detailEl.innerHTML = '<p>Read it on GitHub: <a href="' + esc(entry.url) + '">' + esc(entry.title || slug) + '</a></p>';
+      return;
+    }
+    fetch(raw).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.text();
+    }).then(function (md) {
+      if (typeof marked !== 'undefined' && marked.parse) {
+        detailEl.innerHTML = '<div class="skill-doc">' + marked.parse(md) + '</div>';
+      } else {
+        detailEl.innerHTML = '<pre>' + esc(md) + '</pre>';
+      }
+    }).catch(function () {
+      detailEl.innerHTML = '<p>Could not load the skillbook from its source. Read it directly: ' +
+        '<a href="' + esc(entry.url) + '">' + esc(entry.title || slug) + '</a></p>';
+    });
+  }
+
   function render() {
     var skills = (reg && reg.skills) || {};
     var names = Object.keys(skills).sort();
+    var book = bookFromUrl();
     var name = nameFromUrl();
+
+    if (book) {
+      statusEl.innerHTML = '<a class="back-link" href="load.html">&larr; All skills</a> Loading skillbook…';
+      detailEl.innerHTML = '';
+      fetchSkillbookEntry(book, 0, function (entry) {
+        renderBook(entry, book);
+      }, function () {
+        statusEl.textContent = 'Skillbook not found: ' + book;
+        detailEl.innerHTML = cardGrid(skills, names);
+        fetchSkillbooks(0);
+      });
+      return;
+    }
 
     if (!name) {
       statusEl.innerHTML = 'No skill specified. Use <code>?s=&lt;skill-name&gt;</code> — available skills and skillbooks:';
@@ -248,8 +321,15 @@
     render();
   }
 
-  // Client-side routing: skill links and the back link render in place,
-  // without a page reload. External links (repos, skillbooks) behave normally.
+  function navigateBook(slug) {
+    history.pushState(null, '', '?book=' + encodeURIComponent(slug));
+    window.scrollTo(0, 0);
+    render();
+  }
+
+  // Client-side routing: skill links, skillbook links and the back link render
+  // in place, without a page reload. External links (repos, a skillbook's
+  // GitHub link) behave normally.
   document.addEventListener('click', function (e) {
     var a = e.target.closest ? e.target.closest('a') : null;
     if (!a) return;
@@ -260,7 +340,9 @@
     } else if (href.charAt(0) === '?') {
       var q = new URLSearchParams(href.slice(1));
       var n = (q.get('s') || q.get('skill') || '').trim().toLowerCase();
-      if (n) { e.preventDefault(); navigate(n); }
+      var b = (q.get('book') || q.get('skillbook') || '').trim().toLowerCase();
+      if (b) { e.preventDefault(); navigateBook(b); }
+      else if (n) { e.preventDefault(); navigate(n); }
     }
   });
 
